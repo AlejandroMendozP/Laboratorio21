@@ -1,10 +1,10 @@
 import time
-import threading
+import asyncio
 import random
 
-def consultar(archivo, tiempo):
+async def consultar(archivo, tiempo):
     print(f"Consultando...{archivo}")
-    time.sleep(tiempo)
+    await asyncio.sleep(tiempo)
     print(f"Consulta exitosa: {archivo}")
 
 tareas = [
@@ -15,14 +15,14 @@ tareas = [
 
 inicio = time.time()
 
-hilos = []
-for nombre, tiempo in tareas:
-    h = threading.Thread(target=consultar, args=(nombre, tiempo))
-    h.start()
-    hilos.append(h)
-
-for h in hilos:
-    h.join()
-
-fin = time.time()
-print(f"Tiempo total: {fin - inicio:.2f} segundos")
+async def main():
+   inicio = time.time()
+   await asyncio.gather(
+       consultar("Archivo A", random.uniform(1, 5)),
+       consultar("Archivo B", random.uniform(1, 5)),
+       consultar("Archivo C", random.uniform(1, 5))
+    
+    )
+   
+print("Tiempo total:", time.time() - inicio)
+asyncio.run(main())
